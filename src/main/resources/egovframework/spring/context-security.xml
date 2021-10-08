@@ -15,44 +15,45 @@
 		정진호 표준프레임워크 v3.10 개선 -->
 
 	<security:http>
-		<security:intercept-url pattern="/loginForm.do"
-			access="permitAll" />
 		<security:intercept-url pattern="/home.do"
+			access="permitAll" />
+		<security:intercept-url pattern="/auth/**"
 			access="permitAll" />
 		<security:intercept-url pattern="/admin/**"
 			access="hasRole('ADMIN')" />
 		<security:intercept-url pattern="/**"
 			access="hasAnyRole('USER, ADMIN')" />
-		<security:form-login login-page="/loginForm.do"
-			default-target-url="/home.do"
-			authentication-failure-url="/loginForm.do?error"
+		<security:form-login
+			login-page="/auth/loginForm.do" default-target-url="/home.do"
+			authentication-failure-url="/auth/loginForm.do?error"
 			username-parameter="uid" password-parameter="password" />
 		<security:logout logout-url="/logout"
 			logout-success-url="/home.do" />
 
 		<security:access-denied-handler
-			error-page="/loginDenied.do" />
+			error-page="/auth/loginDenied.do" />
 	</security:http>
 
-	<!-- <security:authentication-manager>
-		<security:authentication-provider>
-			<security:user-service>
-				<security:user name="admin" password="admin"
-					authorities="ROLE_ADMIN" />
-				<security:user name="user" password="user"
-					authorities="ROLE_USER" />
-			</security:user-service>
-		</security:authentication-provider>
-	</security:authentication-manager> -->
+	<!-- <security:authentication-manager> <security:authentication-provider> 
+		<security:user-service> <security:user name="admin" password="admin" authorities="ROLE_ADMIN" 
+		/> <security:user name="user" password="user" authorities="ROLE_USER" /> 
+		</security:user-service> </security:authentication-provider> </security:authentication-manager> -->
 
 	<bean id="userDetailsService"
 		class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<!-- BCryptPasswordEncoder 클래스 빈 추가 -->
+	<bean id="bcryptPasswordEncoder"
+		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
 	<!-- provider -->
 	<security:authentication-manager>
 		<security:authentication-provider>
+			<!-- 로그인 시 비밀번호를 암호화해서 DB에서 조회한 비밀번호와 비교 -->
+			<security:password-encoder
+				ref="bcryptPasswordEncoder" />
 			<security:jdbc-user-service
 				data-source-ref="dataSource" role-prefix=""
 				users-by-username-query="select user_id, password, use_yn from tb_users where user_id = ?"

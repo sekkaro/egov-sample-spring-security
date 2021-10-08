@@ -15,7 +15,7 @@
 
 	<sec:authorize access="isAnonymous()">
 		<p>
-			<a href="<c:url value="/login/loginForm.do" />">로그인</a>
+			<a href="<c:url value="/auth/loginForm.do" />">로그인</a>
 		</p>
 	</sec:authorize>
 
@@ -27,7 +27,9 @@
 	</sec:authorize>
 
 	<h3>
-		<a href="<c:url value="/egovSampleList.do" />">리스트</a>
+		<a href="<c:url value="/auth/registerForm.do" />">회원 가입</a> <a
+			href="<c:url value="/egovSampleList.do" />">리스트</a> <a
+			href="<c:url value="/admin/admin.do" />">관리자 홈</a>
 	</h3>
 
 </body>

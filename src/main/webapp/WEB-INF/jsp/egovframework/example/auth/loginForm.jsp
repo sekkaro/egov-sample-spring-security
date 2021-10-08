@@ -22,7 +22,7 @@
 			<p>로그아웃 하였습니다.</p>
 		</c:if>
 		<p>
-			<label for="username">아이디</label> <input type="text" id="uid"
+			<label for="uid">아이디</label> <input type="text" id="uid"
 				name="uid" />
 		</p>
 		<p>

@@ -17,5 +17,7 @@
 			type="egovframework.example.sample.service.SampleDefaultVO" />
 		<typeAlias alias="sampleVO"
 			type="egovframework.example.sample.service.SampleVO" />
+		<typeAlias alias="userVO"
+			type="egovframework.example.sample.service.UserVO" />
 	</typeAliases>
 </configuration>

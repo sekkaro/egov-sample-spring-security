@@ -218,28 +218,4 @@ public class EgovSampleController {
 		return "forward:/egovSampleList.do";
 	}
 
-	@RequestMapping("/home.do")
-	public String home() throws Exception {
-
-		return "home";
-	}
-
-	@RequestMapping("/loginForm.do")
-	public String login() throws Exception {
-
-		return "auth/loginForm";
-	}
-
-	@RequestMapping("/loginDenied.do")
-	public String loginDenied() throws Exception {
-
-		return "auth/loginDenied";
-	}
-
-	@RequestMapping("/admin/admin.do")
-	public String admin() throws Exception {
-
-		return "admin/adminMain";
-	}
-
 }
