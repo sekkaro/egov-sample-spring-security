@@ -34,5 +34,7 @@ import java.util.List;
 public interface UserService {
 
 	void register(UserVO vo) throws Exception;
+	
+	void checkCsrfCredentials() throws Exception;
 
 }

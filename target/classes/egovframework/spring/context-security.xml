@@ -15,6 +15,8 @@
 		정진호 표준프레임워크 v3.10 개선 -->
 
 	<security:http>
+	<security:intercept-url pattern="/index.jsp"
+			access="permitAll" />
 		<security:intercept-url pattern="/home.do"
 			access="permitAll" />
 		<security:intercept-url pattern="/auth/**"
@@ -32,6 +34,15 @@
 
 		<security:access-denied-handler
 			error-page="/auth/loginDenied.do" />
+
+		<security:csrf disabled="false" />
+
+		<security:session-management
+			invalid-session-url="/home.do">
+			<security:concurrency-control
+				max-sessions="1" expired-url="/home.do"
+				error-if-maximum-exceeded="true" />
+		</security:session-management>
 	</security:http>
 
 	<!-- <security:authentication-manager> <security:authentication-provider> 
@@ -49,22 +60,24 @@
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
 	<!-- provider -->
-	<security:authentication-manager>
-		<security:authentication-provider user-service-ref="securityService">
+	<security:authentication-manager
+		erase-credentials="false">
+		<security:authentication-provider
+			user-service-ref="securityService">
 			<!-- 로그인 시 비밀번호를 암호화해서 DB에서 조회한 비밀번호와 비교 -->
 			<security:password-encoder
 				ref="bcryptPasswordEncoder" />
-			<!-- <security:jdbc-user-service
-				data-source-ref="dataSource" role-prefix=""
-				users-by-username-query="select user_id, password, use_yn from tb_users where user_id = ?"
-				authorities-by-username-query="select user_id, authority from tb_authorities where user_id = ?"
-				group-authorities-by-username-query="select g.id, g.group_name, ga.authority from tb_groups g, 
-				          tb_group_members gm, tb_group_authorities ga where gm.user_id = ? 
-				          and g.id = ga.group_id and g.id = gm.group_id" /> -->
+			<!-- <security:jdbc-user-service data-source-ref="dataSource" role-prefix="" 
+				users-by-username-query="select user_id, password, use_yn from tb_users where 
+				user_id = ?" authorities-by-username-query="select user_id, authority from 
+				tb_authorities where user_id = ?" group-authorities-by-username-query="select 
+				g.id, g.group_name, ga.authority from tb_groups g, tb_group_members gm, tb_group_authorities 
+				ga where gm.user_id = ? and g.id = ga.group_id and g.id = gm.group_id" /> -->
 		</security:authentication-provider>
 	</security:authentication-manager>
-	
-	<bean id="securityService" class="egovframework.example.sample.service.impl.UserJdbcDaoImpl">
+
+	<bean id="securityService"
+		class="egovframework.example.sample.service.impl.UserJdbcDaoImpl">
 		<property name="dataSource" ref="dataSource" />
 		<property name="rolePrefix" value="" />
 		<property name="usersByUsernameQuery">

@@ -15,6 +15,8 @@
  */
 package egovframework.example.sample.service.impl;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import egovframework.example.sample.service.EgovSampleService;
@@ -30,6 +32,11 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +78,26 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 		vo.setUseYn("Y");
 		userDAO.insertUser(vo);
 
+	}
+
+	@Override
+	public void checkCsrfCredentials() throws Exception {
+		SecurityContext context = SecurityContextHolder.getContext();
+
+		Authentication authentication = context.getAuthentication();
+
+		UserDetails principal = (UserDetails) authentication.getPrincipal();
+		String username = principal.getUsername();
+		String password = principal.getPassword();
+		System.out.println("username: " + username + ", password: " + password);
+
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+
+		while (iter.hasNext()) {
+			GrantedAuthority auth = iter.next();
+			System.out.println("권한: " + auth.getAuthority());
+		}
 	}
 
 }

@@ -22,12 +22,15 @@
 			<p>로그아웃 하였습니다.</p>
 		</c:if>
 		<p>
-			<label for="uid">아이디</label> <input type="text" id="uid"
-				name="uid" />
+			<label for="uid">아이디</label> <input type="text" id="uid" name="uid" />
 		</p>
 		<p>
 			<label for="password">비밀번호</label> <input type="password"
 				id="password" name="password" />
+		</p>
+		<p>
+			<input type="hidden" name="${_csrf.parameterName }"
+				value="${_csrf.token }" />
 		</p>
 		<button type="submit" class="btn">로그인</button>
 	</form:form>

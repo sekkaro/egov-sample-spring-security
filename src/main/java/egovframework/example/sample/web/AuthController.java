@@ -15,6 +15,8 @@
  */
 package egovframework.example.sample.web;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import egovframework.example.sample.service.EgovSampleService;
@@ -30,6 +32,11 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,7 +67,7 @@ public class AuthController {
 
 	@RequestMapping("/home.do")
 	public String home() throws Exception {
-
+		
 		return "home";
 	}
 
