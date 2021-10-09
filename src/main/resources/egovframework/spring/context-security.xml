@@ -50,18 +50,38 @@
 
 	<!-- provider -->
 	<security:authentication-manager>
-		<security:authentication-provider>
+		<security:authentication-provider user-service-ref="securityService">
 			<!-- 로그인 시 비밀번호를 암호화해서 DB에서 조회한 비밀번호와 비교 -->
 			<security:password-encoder
 				ref="bcryptPasswordEncoder" />
-			<security:jdbc-user-service
+			<!-- <security:jdbc-user-service
 				data-source-ref="dataSource" role-prefix=""
 				users-by-username-query="select user_id, password, use_yn from tb_users where user_id = ?"
 				authorities-by-username-query="select user_id, authority from tb_authorities where user_id = ?"
 				group-authorities-by-username-query="select g.id, g.group_name, ga.authority from tb_groups g, 
 				          tb_group_members gm, tb_group_authorities ga where gm.user_id = ? 
-				          and g.id = ga.group_id and g.id = gm.group_id" />
+				          and g.id = ga.group_id and g.id = gm.group_id" /> -->
 		</security:authentication-provider>
 	</security:authentication-manager>
+	
+	<bean id="securityService" class="egovframework.example.sample.service.impl.UserJdbcDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+		<property name="rolePrefix" value="" />
+		<property name="usersByUsernameQuery">
+			<value>
+				SELECT user_id, password, use_yn
+				FROM tb_users
+				WHERE user_id = ?
+			</value>
+		</property>
+		<property name="authoritiesByUsernameQuery">
+			<value>
+				SELECT user_id, authority
+				FROM tb_authorities
+				WHERE user_id = ?
+			</value>
+		</property>
+		<property name="enableGroups" value="false" />
+	</bean>
 
 </beans>

@@ -68,6 +68,7 @@ public class UserServiceImpl extends EgovAbstractServiceImpl implements UserServ
 	public void register(UserVO vo) throws Exception {
 		String encPassword = passwordEncoder.encode(vo.getPassword());
 		vo.setPassword(encPassword);
+		vo.setUseYn("Y");
 		userDAO.insertUser(vo);
 
 	}

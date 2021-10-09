@@ -16,6 +16,15 @@
 package egovframework.example.sample.service;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * @Class Name : SampleVO.java
@@ -31,17 +40,55 @@ import java.io.Serializable;
  *
  *      Copyright (C) by MOPAS All right reserved.
  */
-public class UserVO implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class UserVO implements UserDetails {
 
 	private String userId;
 
 	private String password;
 
-	private int useYn;
+	private String useYn;
 
-	public String getUserId() {
+	boolean accountNonExpired;
+	boolean credentialsNonExpired;
+	boolean accountNonLocked;
+	private Set<GrantedAuthority> authorities;
+
+	public UserVO(String username, String password, String useYn, Collection<? extends GrantedAuthority> authorities) {
+		this(username, password, useYn, true, true, true, authorities);
+	}
+
+	public UserVO(String userId, String password, String useYn, boolean accountNonExpired,
+			boolean credentialsNonExpired, boolean accountNonLocked,
+			Collection<? extends GrantedAuthority> authorities) {
+
+		if (((userId == null) || "".equals(userId)) || (password == null)) {
+			throw new IllegalArgumentException("Cannot pass null or empty values to constructor");
+		}
+
+		this.userId = userId;
+		this.password = password;
+		this.useYn = useYn;
+		this.accountNonExpired = accountNonExpired;
+		this.credentialsNonExpired = credentialsNonExpired;
+		this.accountNonLocked = accountNonLocked;
+		this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
+	}
+
+	public UserVO(String userId, String password, String useYn) {
+		this.userId = userId;
+		this.password = password;
+		this.useYn = useYn;
+	}
+
+	public UserVO(String userId, String password, String useYn, Set<GrantedAuthority> authorities) {
+		super();
+		this.userId = userId;
+		this.password = password;
+		this.useYn = useYn;
+		this.authorities = authorities;
+	}
+
+	public String getUsername() {
 		return userId;
 	}
 
@@ -57,17 +104,65 @@ public class UserVO implements Serializable {
 		this.password = password;
 	}
 
-	public int getUseYn() {
-		return useYn;
-	}
-
-	public void setUseYn(int useYn) {
+	public void setUseYn(String useYn) {
 		this.useYn = useYn;
 	}
 
 	@Override
-	public String toString() {
-		return "UserVO [userId=" + userId + ", password=" + password + ", useYn=" + useYn + "]";
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return authorities;
+	}
+
+	public void setAuthorities(Set<GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return accountNonExpired;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return accountNonLocked;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return credentialsNonExpired;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return "Y".equals(useYn);
+	}
+
+	private static SortedSet<GrantedAuthority> sortAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet<GrantedAuthority>(new AuthorityComparator());
+		for (GrantedAuthority grantedAuthority : authorities) {
+			sortedAuthorities.add(grantedAuthority);
+		}
+		return sortedAuthorities;
+	}
+
+	private static class AuthorityComparator implements Comparator<GrantedAuthority>, Serializable {
+
+		public int compare(GrantedAuthority g1, GrantedAuthority g2) {
+			if (g2.getAuthority() == null) {
+				return -1;
+			}
+
+			if (g1.getAuthority() == null) {
+				return 1;
+			}
+			return g1.getAuthority().compareTo(g2.getAuthority());
+
+		}
 	}
 
 }
